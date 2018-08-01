@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inrevo.biz.dao.GroupRelationDao">
+
+    <!-- 一般不需要使用这个配置，如果返回数据包含其他表数据，则可以根据这个配置进行修改
+    <resultMap id="GroupRelationResult" type="com.inrevo.biz.model.GroupRelation">
+        <result property="id" column="id" />
+        <result property="factoryId" column="factory_id" />
+        <result property="userId" column="user_id" />
+        <result property="alaGroupId" column="ala_group_id" />
+        <result property="createTime" column="create_time" />
+        <result property="modifyTime" column="modify_time" />
+    </resultMap>
+    -->
+
+    <sql id="findColumn">
+        select
+            id as id,
+            factory_id as factoryId,
+            user_id as userId,
+            ala_group_id as alaGroupId,
+            create_time as createTime,
+            modify_time as modifyTime
+        from ala_group_relation
+    </sql>
+
+    <sql id="findCondition">
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="factoryId != null">
+                and factory_id = #{factoryId}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="alaGroupId != null">
+                and ala_group_id = #{alaGroupId}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="findConditionWithPage">
+        <where>
+            <if test="param1.id != null">
+                and id = #{param1.id}
+            </if>
+            <if test="param1.factoryId != null">
+                and factory_id = #{param1.factoryId}
+            </if>
+            <if test="param1.userId != null">
+                and user_id = #{param1.userId}
+            </if>
+            <if test="param1.alaGroupId != null">
+                and ala_group_id = #{param1.alaGroupId}
+            </if>
+            <if test="param1.createTime != null">
+                and create_time = #{param1.createTime}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="findByIds">
+        <include refid="findColumn" />
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </sql>
+
+    <select id="find" parameterType="integer" resultType="GroupRelation">
+        <include refid="findColumn" />
+        where id = #{id}
+    </select>
+
+    <select id="findByIds" resultType="GroupRelation">
+        <include refid="findByIds" />
+    </select>
+
+    <select id="findMap" resultType="GroupRelation">
+        <include refid="findByIds" />
+    </select>
+
+    <select id="findByEntity" parameterType="GroupRelation" resultType="GroupRelation">
+        <include refid="findColumn" />
+        <include refid="findCondition" />
+    </select>
+
+    <select id="findByEntityWithPage" parameterType="map" resultType="GroupRelation">
+        <include refid="findColumn" />
+        <include refid="findConditionWithPage" />
+    </select>
+
+    <select id="findByParam" parameterType="map" resultType="GroupRelation">
+        <include refid="findColumn" />
+        <!-- 这里故意返回空列表，使用此方法前请先根据实际业务修改下面的条件 -->
+        where 1 = 0;
+    </select>
+
+    <select id="findByParamWithPage" parameterType="map" resultType="GroupRelation">
+        <include refid="findColumn" />
+        <!-- 这里故意返回空列表，使用此方法前请先根据实际业务修改下面的条件 -->
+        where 1 = 0;
+    </select>
+
+    <insert id="insert" parameterType="GroupRelation" useGeneratedKeys="true" keyProperty="id">
+        insert into ala_group_relation(
+            factory_id,
+            user_id,
+            ala_group_id,
+            create_time)
+        values(
+            #{factoryId},
+            #{userId},
+            #{alaGroupId},
+            #{createTime})
+    </insert>
+
+    <update id="update" parameterType="GroupRelation">
+        update ala_group_relation
+        set
+            factory_id = #{factoryId},
+            user_id = #{userId},
+            ala_group_id = #{alaGroupId},
+            create_time = #{createTime}
+        where id = #{id}
+    </update>
+
+    <update id="updateIfPossible" parameterType="GroupRelation">
+        update ala_group_relation
+        <set>
+            <if test="factoryId != null">factory_id = #{factoryId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="alaGroupId != null">ala_group_id = #{alaGroupId},</if>
+            <if test="createTime != null">create_time = #{createTime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from ala_group_relation where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

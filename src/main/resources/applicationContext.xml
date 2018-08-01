@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <description>Spring 公共配置</description>
+
+    <context:property-placeholder location="classpath:jdbc.properties" />
+    <util:properties id="settings" location="classpath:codegen.properties" />
+
+    <context:component-scan base-package="com.jeesea.codegen" />
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource"
+        p:driverClass="${jdbc.driverClassName}" p:url="${jdbc.url}" p:username="${jdbc.username}"
+        p:password="${jdbc.password}" />
+
+</beans>
